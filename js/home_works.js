@@ -22,14 +22,93 @@ gmailButton.onclick = () => {
     }
 }
 // код не доработан, но хотя бы изменения есть, надо в будущем сделать так чтобы если пользователь напишет допустим 's', то надо чтобы не выводилось 'количество символов должно варьироваться от 7 до 20' идея осуществима но щас сложно будет, сделай как будешь готов (памятка: надо сделать так чтобы val считалось без 10 символов то есть без @gmail.com)
-const childSquare = document.querySelector('.child_block')
-let leftIndent = 0 
+
+// const childSquare = document.querySelector('.child_block')
+
+// let positionX = 0 
+// let positionY = 0 
+
+// const moveSquare = () => {
+//     if (positionX < 446.5 && positionY === 0) {
+//         positionX++
+//         childSquare.style.left = `${positionX}px`
+//         setTimeout(moveSquare,-10)
+//     } else if (positionX >= 446.5 && positionY < 447) {
+//         positionY++
+//         childSquare.style.top = `${positionY}px`
+//         setTimeout(moveSquare,1)
+//     } else if (positionX >= 1 && positionY >= 447) {
+//         positionX--
+//         childSquare.style.left = `${positionX}px`
+//         setTimeout(moveSquare,1)
+//     } else if (positionX <= 1 && positionY >= 0) {
+//         positionY--
+//         childSquare.style.top = `${positionY}px`
+//         setTimeout(moveSquare,1)
+//     }
+// }
+// moveSquare()   это был мой код по квадрату
+
+const parentSquare = document.querySelector('.parent_block');
+const childSquare = document.querySelector('.child_block');
+
+const parentSize = 500;
+const childSize = 50; // Размер круга (дочернего квадрата)
+const radius = (parentSize - childSize) / 2; // Радиус кругового движения
+
+let angle = 0;
 
 const moveSquare = () => {
-    childSquare.style.left = `${leftIndent}px`
-    leftIndent++
-    if (leftIndent < 448) {
-        moveSquare()
+    angle += 0.01; // Изменяем угол для создания кругового движения
+    const x = Math.cos(angle) * radius + radius; // Вычисляем новую позицию X
+    const y = Math.sin(angle) * radius + radius; // Вычисляем новую позицию Y
+
+    childSquare.style.left = `${x}px`;
+    childSquare.style.top = `${y}px`;
+
+    requestAnimationFrame(moveSquare);
+};
+moveSquare(); //                                       а это код gpt
+
+const counter = document.querySelector('#seconds')
+const startButton = document.querySelector('#start')
+const stopButton = document.querySelector('#stop')
+const resetButton = document.querySelector('#reset')
+const resumeButton = document.querySelector('#resume')
+
+
+let interval;
+let seconds = 0;
+let paused = false; 
+
+
+const startTimer = () => {
+    seconds++
+    counter.innerHTML = seconds;
+}
+
+startButton.onclick = () => {
+    if (!paused) {
+        interval = setInterval(startTimer, 1000);
+        paused = true;
     }
 }
-moveSquare()
+
+stopButton.onclick = () => {
+    clearInterval(interval);
+    paused = false
+}
+
+resetButton.onclick = () => {
+    clearInterval(interval);
+    seconds = 0;
+    counter.innerHTML = '0';
+    paused = false
+}
+
+resumeButton.onclick = () => {
+    if (!paused) {
+        interval = setInterval(startTimer, 1000);
+        paused = true;
+    }
+}
